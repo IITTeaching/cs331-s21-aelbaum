@@ -22,7 +22,11 @@ def captured_output():
 
 # implement this function
 def is_perfect(n):
-    pass
+    total = 0
+    for i in range(n):
+        if n % i == 0:
+            total += i
+    return total == n
 
 # (3 points)
 def test1():
@@ -40,7 +44,11 @@ def test1():
 
 # implement this function
 def multiples_of_3_and_5(n):
-    pass
+    total = 0
+    for i in range(n):
+        if i % 3 == 0 or i % 5 == 0:
+            total += i
+    return total
 
 # (3 points)
 def test2():
@@ -53,7 +61,15 @@ def test2():
 # EXERCISE 3
 #################################################################################
 def integer_right_triangles(p):
-    pass
+    answers = []
+    for i in range(1,p):
+        for j in range(i, p-i):
+            h = p - i - j
+            if i**2 + j**2 == h**2:
+                answers.append((i,j,h))
+            elif i**2 + j**2 == h**2:
+                break
+    return answers
 
 def test3():
     tc = unittest.TestCase()
@@ -67,7 +83,18 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    pass
+    str = ''
+    for i in range(len(chars)**2 -1):
+        if i <= len(chars):
+            temp = i
+        else:
+            temp = abs(len(chars) - i)
+        x = chars[0,temp]
+        join = '.'.join(line)
+        line = join.center(len(chars)*4 - 3, '.')
+        str += line + '\n'
+    return str
+    
 
 def test4():
     with captured_output() as (out,err):
