@@ -61,15 +61,18 @@ def test2():
 # EXERCISE 3
 #################################################################################
 def integer_right_triangles(p):
-    answers = 0
-    for i in range(1,p):
-        for j in range(i, p-i):
-            h = p - i - j
-            if i**2 + j**2 == h**2:
-                answers += 1
-            elif i**2 + j**2 == h**2:
-                break
-    return answers
+    answers = [None]
+    if p % 2 != 0:
+        return 0
+    else:
+        amt = 0
+        for x in range(1, p//2):
+            y =p/2 * ((p-2*x)/(p-x))
+            if y == int(y):
+                ans = tuple(sorted((int(y),x)))
+                if ans not in answers:
+                    amt += 1
+                    answers.append(ans)
 
 def test3():
     tc = unittest.TestCase()
@@ -83,20 +86,20 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
-    if len(chars) == 1:
-        return chars
+    line_length=len(chars)*2-1
     str = ''
-    for i in range(len(chars)**2 -1):
-        if i <= len(chars):
-            temp = i
-        else:
-            temp = abs(len(chars) - i)
-        x = chars[0,temp]
-        join = '.'.join(line)
-        line = join.center(len(chars)*4 - 3, '.')
-        str += line + '\n'
-    return str
-    
+    def switch(a,b):
+        a=''.join(reversed(a))[:b]
+        x=a+''.join(reversed(a))[1:]
+        return x
+    max= len('.'.join(switch(chars,len(chars))))
+    for i in range(1,int(line_length/2+1)):
+        mid =switch(chars,i)
+        str += '.'.join(mid).center(max,'.') + "\n"
+    for i in range(int(line_length/2+1),0,-1):
+        mid=switch(chars,i)
+        str += '.'.join(mid).center(max,'.') + "\n"
+    return str[:len(str)-2]
 
 def test4():
     tc = unittest.TestCase()
