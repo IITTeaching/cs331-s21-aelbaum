@@ -83,8 +83,10 @@ def test3():
 
 # implement this function
 def gen_pattern(chars):
+    if len(chars) == 1:
+        print(chars)
+        return None
     line_length=len(chars)*2-1
-    str = ''
     def switch(a,b):
         a=''.join(reversed(a))[:b]
         x=a+''.join(reversed(a))[1:]
@@ -92,11 +94,10 @@ def gen_pattern(chars):
     max= len('.'.join(switch(chars,len(chars))))
     for i in range(1,int(line_length/2+1)):
         mid =switch(chars,i)
-        str += '.'.join(mid).center(max,'.') + "\n"
+        print('.'.join(mid).center(max,'.'))
     for i in range(int(line_length/2+1),0,-1):
         mid=switch(chars,i)
-        str += '.'.join(mid).center(max,'.') + "\n"
-    return str[:len(str)-2]
+        print('.'.join(mid).center(max,'.'))
 
 def test4():
     tc = unittest.TestCase()
