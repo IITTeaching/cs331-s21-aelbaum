@@ -61,18 +61,15 @@ def test2():
 # EXERCISE 3
 #################################################################################
 def integer_right_triangles(p):
-    answers = [None]
-    if p % 2 != 0:
-        return 0
-    else:
-        amt = 0
-        for x in range(1, p//2):
-            y =p/2 * ((p-2*x)/(p-x))
-            if y == int(y):
-                ans = tuple(sorted((int(y),x)))
-                if ans not in answers:
-                    amt += 1
-                    answers.append(ans)
+    answers = 0
+    for i in range(1,p):
+        for j in range(i, p-i):
+            h = p - i - j
+            if i**2 + j**2 == h**2:
+                answers += 1
+            elif i**2 + j**2 == h**2:
+                break
+    return answers
 
 def test3():
     tc = unittest.TestCase()
