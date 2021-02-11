@@ -1,6 +1,7 @@
 from unittest import TestCase
 import random
 import urllib.request
+import re
 
 ROMEO_SOLILOQUY = """
         But, soft! what light through yonder window breaks?
@@ -34,7 +35,21 @@ ROMEO_SOLILOQUY = """
 # Implement this function
 def compute_ngrams(toks, n=2):
     """Returns an n-gram dictionary based on the provided list of tokens."""
-    pass
+    d = {}
+    for i in range(len(toks)-n+1):
+        if toks[i] not in d:
+            lst = []
+            for x in range(n-1):
+                lst.append(toks[x+i+1])
+            t = tuple(lst)
+            d[toks[i]] = [t]
+        else:
+            lst = []
+            for x in range(n-1):
+                lst.append(toks[x+i+1])
+            t = tuple(lst)
+            d[toks[i]] = d[toks[i]] + [t]
+    return d
 
 def test1():
     test1_1()
@@ -93,7 +108,19 @@ def test1_2():
 ################################################################################
 # Implement this function
 def gen_passage(ngram_dict, length=100):
-    pass
+    s = sorted(ngram_dict)
+    key = random.choice(s)
+    count = 0
+    str = key + ' '
+    while(count < length):
+        if key not in ngram_dict:
+            key = random.choice(s)
+            str += key + ' '
+        else:
+            key = random.choice(ngram_dict[key])
+            str += ' '.join(key) + ' '
+            key = key[-1]
+    return str
 
 # 50 Points
 def test2():
