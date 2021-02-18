@@ -25,6 +25,7 @@ def mysort(lst: List[T], compare: Callable[[T, T], int]) -> List[T]:
             x -= 1
         lst[x+1] = cur
     return lst
+    
 
 
 
@@ -36,16 +37,19 @@ def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
     position of the first (leftmost) match for elem in lst. If elem does not
     exist in lst, then return -1.
     """
+    lst2 = lst
     while True:
         cur = lst[len(lst)//2]
-        if not lst:
-            return -1
-        elif compare(cur, S) < 0:
+        # if elem not in lst:
+        #     return -1
+        if compare(cur, elem) < 0:
             lst = lst[len(lst)//2:]
-        elif compare(cur, S) > 0:
+        elif compare(cur, elem) > 0:
             lst = lst[:len(lst)//2]
         else:
-            return len(lst)//2
+            return lst2.index(cur)
+        if len(lst) == 1:
+            return -1
 
 class Student():
     """Custom class to test generic sorting and searching."""
