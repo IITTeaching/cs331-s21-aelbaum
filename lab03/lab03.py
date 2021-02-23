@@ -128,22 +128,32 @@ def test1_5():
 # EXERCISE 2
 #################################################################################
 class PrefixSearcher():
-
-    def __init__(self, document, k):
+    length = 0
+    lst = []
+    doc = ''
+    def __init__(self, document, k):   
         """
         Initializes a prefix searcher using a document and a maximum
         search string length k.
         """
-        pass
+        self.doc = document
+        self.length = k
+        for i in range(len(document)-k -1):
+            self.lst.append(document[i:i+k])
+        for i in range(len(document)-k,len(document)):
+            self.lst.append(document[i:len(document)-1])
+        strcmp = lambda x,y: 0 if x is y else (-1 if x < y else 1)
+        self.doc = mysort(self.lst, strcmp)
 
     def search(self, q):
         """
         Return true if the document contains search string q (of
-
         length up to n). If q is longer than n, then raise an
         Exception.
         """
-        pass
+        if len(q) > self.length:
+            raise Exception("String is too long")
+        return q in self.doc
 
 # 30 Points
 def test2():
@@ -180,25 +190,31 @@ def test2_2():
 # EXERCISE 3
 #################################################################################
 class SuffixArray():
-
+    lst = []
     def __init__(self, document: str):
         """
         Creates a suffix array for document (a string).
         """
-        pass
+        for i in range(len(document)):
+            self.lst.append(document[i:])
+        c = lambda x,y: 0 if x is y else (-1 if x < y else 1)
+        mysort(self.lst, c)
 
 
     def positions(self, searchstr: str):
         """
         Returns all the positions of searchstr in the documented indexed by the suffix array.
         """
-        pass
+        pos = []
+        for i in self.lst:
+            if i is searchstr:
+                pos.append(self.lst.index(i))
 
     def contains(self, searchstr: str):
         """
         Returns true of searchstr is coontained in document.
         """
-        pass
+        return searchstr in self.lst
 
 # 40 Points
 def test3():
