@@ -191,30 +191,36 @@ def test2_2():
 #################################################################################
 class SuffixArray():
     lst = []
+    doc = ""
+    c = lambda x,y: 0 if x is y else (-1 if x < y else 1)
     def __init__(self, document: str):
         """
         Creates a suffix array for document (a string).
         """
+        self.doc = document
         for i in range(len(document)):
             self.lst.append(document[i:])
         c = lambda x,y: 0 if x is y else (-1 if x < y else 1)
         mysort(self.lst, c)
-
 
     def positions(self, searchstr: str):
         """
         Returns all the positions of searchstr in the documented indexed by the suffix array.
         """
         pos = []
-        for i in self.lst:
-            if i is searchstr:
-                pos.append(self.lst.index(i))
+        for i in range(len(self.doc)-len(searchstr)):
+            if self.doc[i:i+len(searchstr)] == searchstr:
+                pos.append(i)
+        return pos
 
     def contains(self, searchstr: str):
         """
         Returns true of searchstr is coontained in document.
         """
-        return searchstr in self.lst
+        for i in range(len(self.doc)-len(searchstr)):
+            if self.doc[i:i+len(searchstr)] == searchstr:
+                return True
+        return False
 
 # 40 Points
 def test3():
