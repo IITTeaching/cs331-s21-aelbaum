@@ -37,19 +37,18 @@ def mybinsearch(lst: List[T], elem: S, compare: Callable[[T, S], int]) -> int:
     position of the first (leftmost) match for elem in lst. If elem does not
     exist in lst, then return -1.
     """
-    lst2 = lst
-    while True:
-        cur = lst[len(lst)//2]
-        # if elem not in lst:
-        #     return -1
-        if compare(cur, elem) < 0:
-            lst = lst[len(lst)//2:]
-        elif compare(cur, elem) > 0:
-            lst = lst[:len(lst)//2]
+    min = 0
+    max = len(lst)-1
+    count = 0
+    while(min<=max):
+        mid = (min+max)//2
+        if compare(lst[mid],elem) == 1:
+            max = mid - 1
+        elif compare(lst[mid],elem)==-1:
+            min = mid + 1
         else:
-            return lst2.index(cur)
-        if len(lst) == 1:
-            return -1
+            return mid
+    return -1
 
 class Student():
     """Custom class to test generic sorting and searching."""
@@ -190,37 +189,37 @@ def test2_2():
 # EXERCISE 3
 #################################################################################
 class SuffixArray():
-    lst = []
-    doc = ""
-    c = lambda x,y: 0 if x is y else (-1 if x < y else 1)
     def __init__(self, document: str):
         """
         Creates a suffix array for document (a string).
         """
+        self.lst = []
         self.doc = document
-        for i in range(len(document)):
-            self.lst.append(document[i:])
+        sub = []
+        for i in range(len(self.doc)):
+            sub.append(self.doc[i:])
         c = lambda x,y: 0 if x is y else (-1 if x < y else 1)
-        mysort(self.lst, c)
+        mysort(sub, c)
+        for i in range(len(sub)):
+            self.lst.append(self.doc.index(sub[i]))
+
 
     def positions(self, searchstr: str):
         """
         Returns all the positions of searchstr in the documented indexed by the suffix array.
         """
-        pos = []
-        for i in range(len(self.doc)-len(searchstr)):
-            if self.doc[i:i+len(searchstr)] == searchstr:
-                pos.append(i)
-        return pos
+        compare = lambda x,y: 0 if self.doc[x:x + len(y)] == y else (-1 if self.doc[x:x + len(y)] < y else 1)
+        return [mybinsearch(self.lst, searchstr, compare)-1]
 
     def contains(self, searchstr: str):
         """
         Returns true of searchstr is coontained in document.
         """
-        for i in range(len(self.doc)-len(searchstr)):
-            if self.doc[i:i+len(searchstr)] == searchstr:
-                return True
-        return False
+        # for i in range(len(self.doc)-len(searchstr)):
+        #     if self.doc[i:i+len(searchstr)] == searchstr:
+        #         return True
+        # return False
+        return searchstr in self.doc
 
 # 40 Points
 def test3():
