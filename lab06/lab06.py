@@ -51,6 +51,17 @@ def check_delimiters(expr):
     delim_closers = '})]>'
 
     ### BEGIN SOLUTION
+    s = Stack()
+    for c in expr:
+        if c in delim_openers:
+            s.push(c)
+        elif c in delim_closers:
+            try:
+                if delim_openers[delim_closers.find(c)] != s.pop(): 
+                    return False
+            except:
+                return False
+    return s.empty()
     ### END SOLUTION
 
 ################################################################################
@@ -111,7 +122,13 @@ def test_check_delimiters_6():
 ################################################################################
 # INFIX -> POSTFIX CONVERSION
 ################################################################################
-
+def smaller(self, i): 
+        try: 
+            a = self.precedence[i] 
+            b = self.precedence[self.peek()] 
+            return True if a  <= b else False
+        except KeyError:  
+            return False
 def infix_to_postfix(expr):
     """Returns the postfix form of the infix expression found in `expr`"""
     # you may find the following precedence dictionary useful
@@ -121,6 +138,30 @@ def infix_to_postfix(expr):
     postfix = []
     toks = expr.split()
     ### BEGIN SOLUTION
+    for i in toks:
+        if i.isdigit():
+            postfix.append(i)
+        elif i is ")":
+            while not ops.empty() and (ops.peek() is not "("):
+                postfix.append(ops.pop())
+            ops.pop()
+        elif i is "(":
+            ops.push(i)
+        elif ops.empty() or ops.peek() is '(':
+            ops.push(i)
+        elif prec[i] > prec[ops.peek()]:
+            ops.push(i)
+        elif prec[i] == prec[ops.peek()]:
+            postfix.append(ops.pop())
+            ops.push(i)
+        else:
+            while not ops.empty() and (ops.peek() is not "("):
+                postfix.append(ops.pop())
+            ops.push(i)
+        
+    while not ops.empty():
+        x = ops.pop()
+        postfix.append(x)
     ### END SOLUTION
     return ' '.join(postfix)
 
@@ -160,25 +201,57 @@ class Queue:
         self.data = [None] * limit
         self.head = -1
         self.tail = -1
-
-    ### BEGIN SOLUTION
-    ### END SOLUTION
-
     def enqueue(self, val):
         ### BEGIN SOLUTION
+        self.head += 1
+        if self.head == len(self.data):
+            self.head = 0
+        if self.data[self.head] == None:
+            self.data[self.head] = val
+        else:
+            self.head -= 1
+            if self.head < 0:
+                self.head = len(self.data) - 1
+            raise RuntimeError
         ### END SOLUTION
 
     def dequeue(self):
         ### BEGIN SOLUTION
+        if self.tail == -1:
+            self.tail = 0
+        self.tail += 1
+        if self.tail == len(self.data):
+            self.tail = 0
+        if self.data[self.tail - 1] == None:
+            self.tail -= 1
+            if self.tail == -1:
+                self.tail = len(self.data) - 1
+            raise RuntimeError
+        else:
+            end = self.data[self.tail - 1]
+            self.data[self.tail - 1] = None
+            if (self.tail - 1) % len(self.data) == self.head:
+                self.head = -1
+                self.tail = -1
+
+            return end
         ### END SOLUTION
 
     def resize(self, newsize):
         assert(len(self.data) < newsize)
         ### BEGIN SOLUTION
+        temp = [None] * newsize
+        x = self.tail
+        for i in range(len(self.data)):
+            temp[i] = self.data[(x + i) % len(self.data)]
+        self.head = len(self.data) - 1
+        self.tail = -1
+        self.data = temp
         ### END SOLUTION
 
     def empty(self):
         ### BEGIN SOLUTION
+        return self.tail == -1 and self.head == -1
         ### END SOLUTION
 
     def __bool__(self):
@@ -194,8 +267,12 @@ class Queue:
 
     def __iter__(self):
         ### BEGIN SOLUTION
+        for x in range(len(self.data) - self.tail):
+            if self.tail == -1:
+                yield self.data[x]
+            else:
+                yield self.data[(x + self.tail) % len(self.data)]
         ### END SOLUTION
-
 ################################################################################
 # QUEUE IMPLEMENTATION - TEST CASES
 ################################################################################
